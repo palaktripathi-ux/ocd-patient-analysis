@@ -54,7 +54,8 @@ col1, col2, col3 = st.columns(3)
 
 col1.metric("Total Patients", len(filtered_df))
 col2.metric("Average Age", round(filtered_df["age"].mean(), 1))
-col3.metric("Average Severity Score", round(filtered_df["ybocs_score"].mean(), 1))
+col3.metric("Average Severity Score (Obsessions)", round(filtered_df["y-bocs_score_(obsessions)"].mean(), 1))
+col3.metric("Average Severity Score (Compulsions)", round(filtered_df["y-bocs_score_(compulsions)"].mean(), 1))
 
 # Charts
 st.subheader("📈 Visual Analysis")
@@ -65,18 +66,18 @@ sns.histplot(filtered_df["age"], kde=True, ax=ax1)
 ax1.set_title("Age Distribution")
 st.pyplot(fig1)
 
-# Severity distribution (if exists)
-if "severity" in filtered_df.columns:
+# previous_diagnoses distribution (if exists)
+if "previous_diagnoses" in filtered_df.columns:
     fig2, ax2 = plt.subplots()
-    sns.countplot(x="severity", data=filtered_df, ax=ax2)
-    ax2.set_title("OCD Severity Levels")
+    sns.countplot(x="previous_diagnoses", data=filtered_df, ax=ax2)
+    ax2.set_title("Previous Diagnoses")
     st.pyplot(fig2)
 
-# Duration vs Severity
+# Duration vs y-bocs_score_(obsessions)
 fig3, ax3 = plt.subplots()
 sns.scatterplot(
     x="duration",
-    y="ybocs_score",
+    y="y-bocs_score_(obsessions)",
     data=filtered_df,
     ax=ax3
 )
