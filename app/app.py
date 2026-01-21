@@ -2,9 +2,19 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 
 import streamlit as st
 st.write("App started successfully")
+import streamlit as st
+
+st.set_page_config(
+    page_title="OCD Patient Analysis Dashboard",
+    layout="wide"
+)
+
+st.title("🧠 OCD Patient Analysis Dashboard")
+st.caption("Interactive exploration of OCD patient demographics and clinical data")
 
 
 # Page config
@@ -26,6 +36,19 @@ df = load_data()
 
 # Sidebar filters
 st.sidebar.header("Filter Patients")
+with st.sidebar:
+    st.header("🎛️ Filter Patients")
+    st.caption("Use these filters to refine the patient data")
+with st.sidebar:
+    if "gender" in df.columns:
+        gender_filter = st.multiselect(
+            "Select Gender",
+            options=df["gender"].dropna().unique(),
+            default=df["gender"].dropna().unique()
+        )
+    else:
+        st.warning("Gender column not found")
+        gender_filter = None
 
 # Gender filter
 gender_options = df["gender"].unique()
@@ -47,6 +70,9 @@ filtered_df = df[
     (df["gender"].isin(selected_gender)) &
     (df["age"].between(age_range[0], age_range[1]))
 ]
+tab1, tab2, tab3 = st.tabs(
+    ["📊 Overview", "📈 Analysis", "🧠 Insights"]
+)
 
 # KPI Metrics
 st.subheader("📊 Key Metrics")
@@ -57,8 +83,38 @@ col2.metric("Average Age", round(filtered_df["age"].mean(), 1))
 col3.metric("Average Severity Score (Obsessions)", round(filtered_df["y-bocs_score_(obsessions)"].mean(), 1))
 col3.metric("Average Severity Score (Compulsions)", round(filtered_df["y-bocs_score_(compulsions)"].mean(), 1))
 
+
 # Charts
 st.subheader("📈 Visual Analysis")
+with tab2:
+    st.subheader("📈 Detailed Analysis")
+    st.caption("Explore patterns and relationships in the data")
+
+    col1, col2 = st.columns(2)
+fig_age = px.histogram(
+    filtered_df,
+    x="age",
+    nbins=20,
+    title="Age Distribution of OCD Patients"
+)
+fig_gender = px.histogram(
+    filtered_df,
+    x="gender",
+    nbins=20,
+    title="Gender Distribution of OCD Patients"
+)
+
+st.plotly_chart(fig_age, use_container_width=True)
+
+st.plotly_chart(fig_age, use_container_width=True)
+
+with col1:
+        st.write("### Age Distribution")
+        st.plotly_chart(fig_age, use_container_width=True)
+
+with col2:
+        st.write("### Severity by Gender")
+        st.plotly_chart(fig_gender, use_container_width=True)
 
 # Age distribution
 fig1, ax1 = plt.subplots()
