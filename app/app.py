@@ -20,7 +20,7 @@ st.write("Interactive exploration of OCD patient demographics and clinical data"
 # Load data
 @st.cache_data
 def load_data():
-    return pd.read_csv("../data/processed/cleaned_ocd_data.csv")
+    return pd.read_csv("data/processed/cleaned_ocd_data.csv")
 
 df = load_data()
 
@@ -86,3 +86,16 @@ st.pyplot(fig3)
 # Raw data toggle
 with st.expander("📄 View Raw Data"):
     st.dataframe(filtered_df)
+    
+from pathlib import Path
+import pandas as pd
+import streamlit as st
+
+DATA_PATH = Path("data/processed/cleaned_ocd_data.csv")
+
+@st.cache_data
+def load_data():
+    if not DATA_PATH.exists():
+        st.error(f"File not found: {DATA_PATH}")
+        st.stop()
+    return pd.read_csv(DATA_PATH)
