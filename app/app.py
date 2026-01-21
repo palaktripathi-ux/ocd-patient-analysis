@@ -73,16 +73,27 @@ if "previous_diagnoses" in filtered_df.columns:
     ax2.set_title("Previous Diagnoses")
     st.pyplot(fig2)
 
-# Duration vs y-bocs_score_(obsessions)
+# age vs y-bocs_score_(obsessions)
 fig3, ax3 = plt.subplots()
 sns.scatterplot(
-    x="duration",
+    x="age",
     y="y-bocs_score_(obsessions)",
     data=filtered_df,
     ax=ax3
 )
-ax3.set_title("Duration vs Severity Score")
+ax3.set_title("Age vs Severity Score (Obsessions)")
 st.pyplot(fig3)
+
+# age vs y-bocs_score_(compulsions)
+fig4, ax4 = plt.subplots()
+sns.scatterplot(
+    x="age",
+    y="y-bocs_score_(compulsions)",
+    data=filtered_df,
+    ax=ax4
+)
+ax4.set_title("Age vs Severity Score (Compulsions)")
+st.pyplot(fig4)
 
 # Raw data toggle
 with st.expander("📄 View Raw Data"):
